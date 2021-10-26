@@ -1,0 +1,25 @@
+main: com.civiltt.discord2server.App
+name: Discord2Server
+version: 1.0
+api: 1.17.1
+api-version: 1.17
+commands:
+  re:
+    description: Reply the message for latest used TextChannel
+    usage: /<command>
+  send:
+    description: Send the message for Discord Server
+    usage: /<command>
+  discordcolor:
+    description: Set the Message author color from Discord
+    usage: /<command>
+  mydiscordname:
+    description: Set your Discord name
+    usage: /<command>
+  mute:
+    description: Set to mute your voice
+    usage: /<command>
+  unmute:
+    description: Set to unmute your voice
+    usage: /<command>
+    # muteとmyDiscordNameは実装したい
