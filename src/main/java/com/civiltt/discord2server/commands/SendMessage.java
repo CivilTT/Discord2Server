@@ -20,7 +20,7 @@ public class SendMessage implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-
+        
         // /re 返信用のコマンド
         if (cmd.getName().equalsIgnoreCase("re")) {
             String name = player.getName();

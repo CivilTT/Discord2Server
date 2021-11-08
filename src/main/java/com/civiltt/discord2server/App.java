@@ -1,5 +1,9 @@
 package com.civiltt.discord2server;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.civiltt.discord2server.commands.PluginFunc;
 import com.civiltt.discord2server.commands.SendMessage;
 import com.civiltt.discord2server.commands.SendMessageTab;
 import com.civiltt.discord2server.commands.SetColor;
@@ -12,21 +16,70 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class App extends JavaPlugin {
 
-    private FileConfiguration config;
-    public static String no_token = "NoToken";
+    public static FileConfiguration config;
+    public static File cfile;
 
     @Override
     public void onEnable() {
-        //config.ymlが存在しなかった場合は新しく作成をします。
-        saveConfig();
+        readConfig();
+        
+        launchBot();
+
+        registCommands();
+
+        // getLogger().info("Hello, SpigotMC!");
+    }
+
+    @Override
+    public void onDisable() {
+        // PlayerDataをjsonに保存する
+        EditPlayers.SetPlayers();
+
+        // config.ymlを保存する
+        config.options().header("You have to set Discord bot yourself");
+        config.options().header("This is required item to use this plugin");
+        config.set("Discord Bot Token", Discord2serverApplication.token);
+        config.options().header("");
+        config.options().header("You can set your Discord Server's ID");
+        config.options().header("This is not required item");
+        config.options().header("However if you don't set this, you can't use /mute and /unmute function");
+        config.set("Discord Server ID", Discord2serverApplication.server_id);
+
+        try {
+            config.save(cfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // getLogger().info("See you again, SpigotMC!");
+    }
+
+    private void readConfig(){
         //config.ymlを読み込みます。
         config = getConfig();
-        Discord2serverApplication.token = config.getString("Discord Bot Token", no_token);
-        Discord2serverApplication.server_id = config.getLong("Discord Server ID");
-        
-        Discord2serverApplication api = new Discord2serverApplication();
-        api.discordApi();
+        // デフォルトのconfigをコピーします。
+        config.options().copyDefaults(true);
+        //config.ymlが存在しなかった場合は新しく作成をします。
+        saveConfig();
+        cfile = new File(getDataFolder(), "config.yml");
+    }
 
+    public static void launchBot(){
+        try {
+            Discord2serverApplication.token = config.getString("Discord Bot Token");
+            Discord2serverApplication.server_id = config.getLong("Discord Server ID");
+
+            Discord2serverApplication api = new Discord2serverApplication();
+            api.discordApi();
+            System.out.println("Success to launch Discord Bot at " + Discord2serverApplication.server_name);
+        } catch (Exception e) {
+            System.out.println("Failed to launch Discord Bot");
+            System.out.println("You have to edit 'Discord Bot Token' in config.yml");
+            System.out.println("Then, Type `reboot` in this console");
+        }
+    }
+
+    private void registCommands(){
         SendMessage SendCommands = new SendMessage();
         SendMessageTab SendTab = new SendMessageTab();
         getCommand("re").setExecutor(SendCommands);
@@ -43,21 +96,7 @@ public class App extends JavaPlugin {
         getCommand("mute").setExecutor(DiscordCommands);
         getCommand("unmute").setExecutor(DiscordCommands);
 
-        getLogger().info("Hello, SpigotMC!");
-    }
-
-    @Override
-    public void onDisable() {
-        // PlayerDataをjsonに保存する
-        EditPlayers.SetPlayers();
-
-        // config.ymlを保存する
-        config.options().header("You have to set Discord bot yourself\n\nThis is required item to use this plugin");
-        config.set("Discord Bot Token", Discord2serverApplication.token);
-        config.options().header("You can set your Discord Server's ID\n\nThis is not required item\nHowever if you don't set this, you can't use /mute and /unmute function");
-        config.set("Discord Server ID", Discord2serverApplication.server_id);
-        saveConfig();
-
-        getLogger().info("See you again, SpigotMC!");
+        PluginFunc pluginFunc = new PluginFunc();
+        getCommand("reboot").setExecutor(pluginFunc);
     }
 }

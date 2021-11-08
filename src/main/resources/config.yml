@@ -1,0 +1,8 @@
+# You have to set Discord bot yourself
+# This is required item to use this plugin
+Discord Bot Token: TOKEN HERE!!
+
+# You can set your Discord Server's ID
+# This is not required item
+# However if you don't set this, you can't use /mute and /unmute function
+Discord Server ID: 0

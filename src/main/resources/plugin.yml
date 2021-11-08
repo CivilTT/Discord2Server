@@ -22,4 +22,6 @@ commands:
   unmute:
     description: Set to unmute your voice
     usage: /<command>
-    # muteとmyDiscordNameは実装したい
+  reboot:
+    description: Reload the config.yml and start Discord Bot
+    usage: /<command>

@@ -1,6 +1,8 @@
 package com.civiltt.discord2server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -35,6 +37,7 @@ import org.bukkit.Bukkit;
 public class Discord2serverApplication {
 
 	public static String token;
+	public static String server_name;
 	public static long server_id;
 
 	public static long LatestMessageChanelid = 0;
@@ -42,6 +45,7 @@ public class Discord2serverApplication {
 
 	public static HashMap<String, Long> TextChannels = new HashMap<String, Long>();
 	public static HashMap<String, Long> VoiceChannels = new HashMap<String, Long>();
+
 
 	// @Autowired
 	// private MessageListener messageListener;
@@ -59,10 +63,10 @@ public class Discord2serverApplication {
 		// Discord のチャンネル一覧を取得
 		GetEnv();
 
-		// Helloと打つと「キモッ」と返す
+		// HelloとDiscordで打つと文字を返す
 		api.addMessageCreateListener(event -> {
 			if (event.getMessageContent().equals("Hello")) {
-				event.getChannel().sendMessage("キモッ");
+				event.getChannel().sendMessage("You can use this Bot/Plugin");
 			}
 		});
 
@@ -196,11 +200,32 @@ public class Discord2serverApplication {
 
 	private void GetServerid() throws IOException {
 		Iterator<Server> servers = api.getServers().iterator();
-		if(api.getServers().size() == 1){
-			server_id = servers.next().getId();
+		int server_count = api.getServers().size();
+		if(server_count == 1){
+			Server server = servers.next();
+			server_id = server.getId();
+			server_name = server.getName();
 		}
 		else{
-			throw new IOException("This bot is able to be imported only one Discord Server");
+			int num = 0;
+			long[] ids = new long[server_count];
+			while(servers.hasNext()){
+				Server server = servers.next();
+				ids[num] = server.getId();
+				System.out.println(num + " : " + server.getName());
+				num++;
+			}
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))){
+				System.out.println("You have to choose Discord Server number");
+				int index = Integer.parseInt(reader.readLine());
+				server_id = ids[index];
+				System.out.println("Successfully set the Discord Server");
+			} catch (NumberFormatException e) {
+				System.out.println("Your input is invalid");
+			}
+
+			// throw new IOException("This bot is able to be imported only one Discord Server");
 		}
 	}
 
