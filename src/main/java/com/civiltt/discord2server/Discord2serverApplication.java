@@ -20,9 +20,9 @@ import org.javacord.api.entity.channel.ServerVoiceChannel;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.*;
+// import org.springframework.boot.SpringApplication;
+// import org.springframework.boot.autoconfigure.SpringBootApplication;
+// import org.springframework.context.annotation.*;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -30,10 +30,10 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+// import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.bukkit.Bukkit;
 
-@SpringBootApplication
+// @SpringBootApplication
 public class Discord2serverApplication {
 
 	public static String token;
@@ -50,12 +50,12 @@ public class Discord2serverApplication {
 	// @Autowired
 	// private MessageListener messageListener;
 
-	public static void main(String[] args) {
-		SpringApplication.run(Discord2serverApplication.class, args);
-	}
+	// public static void main(String[] args) {
+	// 	SpringApplication.run(Discord2serverApplication.class, args);
+	// }
 
-	@Bean
-	@ConfigurationProperties(value = "discord-api")
+	// @Bean
+	// @ConfigurationProperties(value = "discord-api")
 	public DiscordApi discordApi() {
 		api = new DiscordApiBuilder().setToken(token).setAllNonPrivilegedIntents().login().join();
 		api.updateActivity("Minecraft Spigot Server");

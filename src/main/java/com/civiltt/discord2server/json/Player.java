@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Player {
 
     public String DCname;
-    public long DCid;
+    public long DCid = 0;
     // Discordの名前をキーとして、設定されている色(原則、小文字で始まる)を取得
     public HashMap<String, String> DCcolors = new HashMap<String, String>();
 

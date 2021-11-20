@@ -71,11 +71,11 @@ public class App extends JavaPlugin {
 
             Discord2serverApplication api = new Discord2serverApplication();
             api.discordApi();
-            System.out.println("Success to launch Discord Bot at " + Discord2serverApplication.server_name);
+            System.out.println("[Discord2Server] Success to launch Discord Bot at " + Discord2serverApplication.server_name);
         } catch (Exception e) {
-            System.out.println("Failed to launch Discord Bot");
-            System.out.println("You have to edit 'Discord Bot Token' in config.yml");
-            System.out.println("Then, Type `reboot` in this console");
+            System.out.println("[Discord2Server] Failed to launch Discord Bot");
+            System.out.println("[Discord2Server] You have to edit 'Discord Bot Token' in config.yml");
+            System.out.println("[Discord2Server] Then, Type `reboot` in this console");
         }
     }
 
@@ -94,7 +94,7 @@ public class App extends JavaPlugin {
         SetDiscord DiscordCommands = new SetDiscord();
         getCommand("mydiscordname").setExecutor(DiscordCommands);
         getCommand("mute").setExecutor(DiscordCommands);
-        getCommand("unmute").setExecutor(DiscordCommands);
+        // getCommand("unmute").setExecutor(DiscordCommands);
 
         PluginFunc pluginFunc = new PluginFunc();
         getCommand("reboot").setExecutor(pluginFunc);

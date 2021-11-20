@@ -11,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.javacord.api.DiscordApi;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 
 import net.md_5.bungee.api.ChatColor;
@@ -23,7 +24,7 @@ public class SetDiscord implements CommandExecutor {
             return true;
         }
         org.bukkit.entity.Player player = (org.bukkit.entity.Player) sender;
-        Player player_data = EditPlayers.PlayersData.get(player.getName());
+        Player player_data = EditPlayers.PlayersData.getOrDefault(player.getName(), new Player());
 
         // /mydiscordname Discord上での自身の名称を設定する
         if(cmd.getName().equalsIgnoreCase("mydiscordname")){
@@ -39,6 +40,10 @@ public class SetDiscord implements CommandExecutor {
                     player_data.DCid = user.getId();
                 }
 
+                EditPlayers.AddPlayers(player.getName(), player_data);
+
+                player.sendMessage(ChatColor.GREEN + "Success to regist your name in Discord");
+
             }else{
                 player.sendMessage(ChatColor.RED + "Inavalid Arguments : /mydiscordname <your name in discord>");
             }
@@ -48,45 +53,55 @@ public class SetDiscord implements CommandExecutor {
             if(args.length == 0){
                 Long dc_id = player_data.DCid;
                 if(dc_id == 0){
-                    player.sendMessage(ChatColor.RED + "Invalid Settings : You didn't set your Discord name. Use /mydiscordname command and set it");
+                    player.sendMessage(ChatColor.RED + "Invalid Settings : You didn't set your Discord name. Use /mydiscordname <your name in discord> command and set it");
                 }
 
                 DiscordApi api = Discord2serverApplication.api;
                 try {
-                    api.getUserById(dc_id).get().mute(api.getServerById(Discord2serverApplication.server_id).orElse(null));
+                    Server server = api.getServerById(Discord2serverApplication.server_id).orElse(null);
+                    User user = api.getUserById(dc_id).get();
+                    if(user.isMuted(server)){
+                        user.unmute(server);
+                        player.sendMessage(ChatColor.GREEN + "Success to unmute your voice");
+                    }
+                    else{
+                        user.mute(server);
+                        player.sendMessage(ChatColor.GREEN + "Success to mute your voice");
+                    }
+
                 } catch (InterruptedException e) {
+                    player.sendMessage(ChatColor.RED + "InterruptedExcption happened");
                     e.printStackTrace();
                     return true;
                 } catch (ExecutionException e) {
+                    player.sendMessage(ChatColor.RED + "ExecutionException happened");
                     e.printStackTrace();
                     return true;
                 }
-
-                player.sendMessage(ChatColor.GREEN + "Success to mute your voice");
             }
         }
 
-        if(cmd.getName().equalsIgnoreCase("unmute")){
-            if(args.length == 0){
-                Long dc_id = player_data.DCid;
-                if(dc_id == 0){
-                    player.sendMessage(ChatColor.RED + "Invalid Settings : You didn't set your Discord name. Use /mydiscordname command and set it");
-                }
+        // if(cmd.getName().equalsIgnoreCase("unmute")){
+        //     if(args.length == 0){
+        //         Long dc_id = player_data.DCid;
+        //         if(dc_id == 0){
+        //             player.sendMessage(ChatColor.RED + "Invalid Settings : You didn't set your Discord name. Use /mydiscordname <your name in discord> command and set it");
+        //         }
 
-                DiscordApi api = Discord2serverApplication.api;
-                try {
-                    api.getUserById(dc_id).get().unmute(api.getServerById(Discord2serverApplication.server_id).orElse(null));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    return true;
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                    return true;
-                }
+        //         DiscordApi api = Discord2serverApplication.api;
+        //         try {
+        //             api.getUserById(dc_id).get().unmute(api.getServerById(Discord2serverApplication.server_id).orElse(null));
+        //         } catch (InterruptedException e) {
+        //             e.printStackTrace();
+        //             return true;
+        //         } catch (ExecutionException e) {
+        //             e.printStackTrace();
+        //             return true;
+        //         }
 
-                player.sendMessage(ChatColor.GREEN + "Success to unmute your voice");
-            }
-        }
+        //         player.sendMessage(ChatColor.GREEN + "Success to unmute your voice");
+        //     }
+        // }
 
         return true;
     }

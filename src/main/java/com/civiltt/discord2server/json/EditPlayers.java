@@ -1,8 +1,11 @@
 package com.civiltt.discord2server.json;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,9 +70,16 @@ public class EditPlayers {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-		try (FileWriter file = new FileWriter(path)){
+		try {
+			File file = new File(path);
+			PrintWriter p_writer = new PrintWriter(new BufferedWriter
+                (new OutputStreamWriter(new FileOutputStream(file),"Shift-JIS")));
 			String jsonStr = mapper.writeValueAsString(PlayersData);
-			file.write(jsonStr);
+			
+			p_writer.write(jsonStr);
+
+			p_writer.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
